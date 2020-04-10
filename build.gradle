@@ -1,0 +1,97 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.71"
+    id "org.jetbrains.kotlin.kapt" version "1.3.71"
+    id "org.jetbrains.kotlin.plugin.allopen" version "1.3.71"
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "application"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'io.micronaut:micronaut-bom:1.0.2'
+    }
+}
+
+version "0.1"
+group "micronaut.exposed.starter"
+
+repositories {
+    mavenCentral()
+    maven { url "https://jcenter.bintray.com" }
+}
+
+configurations {
+    // for dependencies that are needed for development only
+    developmentOnly 
+}
+
+dependencies {
+    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutineVersion}"
+    implementation "io.micronaut:micronaut-runtime"
+    implementation "io.micronaut:micronaut-http-client"
+    implementation "io.micronaut.configuration:micronaut-jdbc-hikari"
+//    implementation "io.micronaut.configuration:micronaut-flyway"
+    implementation "io.swagger.core.v3:swagger-annotations"
+    implementation "io.micronaut.configuration:micronaut-postgres-reactive"
+    implementation "io.micronaut:micronaut-http-server-netty"
+    implementation "javax.annotation:javax.annotation-api"
+    implementation "org.postgresql:postgresql:42.2.10"
+    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
+    kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
+    kapt "io.micronaut:micronaut-inject-java"
+    kapt "io.micronaut:micronaut-validation"
+    kapt "io.micronaut.configuration:micronaut-openapi"
+    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
+    kaptTest "io.micronaut:micronaut-inject-java"
+    runtimeOnly "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8"
+    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+    testImplementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    testImplementation "io.micronaut.test:micronaut-test-kotlintest"
+    testImplementation "io.mockk:mockk:1.9.3"
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
+}
+
+test.classpath += configurations.developmentOnly
+
+//noinspection GroovyUnusedAssignment
+mainClassName = "micronaut.exposed.starter.Application"
+
+test {
+    useJUnitPlatform()
+}
+
+allOpen {
+	annotation("io.micronaut.aop.Around")
+}
+
+compileKotlin {
+	kotlinOptions {
+	    jvmTarget = '1.8' 
+	    //Will retain parameter names for Java reflection
+	    javaParameters = true 
+	}
+}
+
+compileTestKotlin {
+	kotlinOptions {
+	    jvmTarget = '1.8' 
+	    javaParameters = true 
+	}
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+tasks.withType(JavaExec) {
+    classpath += configurations.developmentOnly
+    jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
+}

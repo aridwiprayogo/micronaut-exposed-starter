@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: micronaut.exposed.starter
+---
+testFramework: kotlintest
+sourceLanguage: kotlin
