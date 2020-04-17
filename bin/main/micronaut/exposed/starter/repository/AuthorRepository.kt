@@ -24,6 +24,7 @@ class AuthorRepository(db: Database) {
         val authorEntity = AuthorEntity.new {
             name = authorDto.name
             version = authorDto.version
+
         }
         authorEntity.id.value
     }

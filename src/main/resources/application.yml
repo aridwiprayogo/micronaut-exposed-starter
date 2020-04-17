@@ -10,16 +10,10 @@ datasources:
     user: postgres
     password: root
     driverClassName: org.postgresql.Driver
----
-postgres:
-  reactive:
-    client:
-      port: 5432
-      host: localhost
-      database: postgres
-      user: "postgres"
-      password: "root"
-      schema: news
-      maxSize: 5
 schema:
   gen: true
+---
+flyway:
+  datasources:
+    default:
+      locations: src/main/resources/db

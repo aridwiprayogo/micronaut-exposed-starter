@@ -32,6 +32,7 @@ object Application {
 
     @PostConstruct
     fun setupSchema(db: Database, @Value("\${schema.gen}") genSchema: Boolean){
+        println("Start Scheme Generation of ${db}, flag- $genSchema")
         if (!genSchema){
             return
         }
@@ -44,6 +45,7 @@ object Application {
 @Singleton
 class DoOnStartup(val database: Database,  @Value("\${schema.gen}") val genSchema: Boolean): ApplicationEventListener<ServiceStartedEvent>{
     override fun onApplicationEvent(event: ServiceStartedEvent?) {
+        println("Start Scheme Generation of ${database}, flag- $genSchema")
         if (!genSchema)return
         transaction {
             SchemaUtils.create(tables = *arrayOf(Authors, PostEntity))

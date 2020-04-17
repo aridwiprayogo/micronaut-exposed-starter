@@ -7,19 +7,11 @@ micronaut:
 datasources:
   default:
     url: jdbc:postgresql://localhost:5432/postgres
-    user: "postgres"
-    password: "root"
+    user: postgres
+    password: root
     driverClassName: org.postgresql.Driver
+    schema: news
+    maximum-pool-size: 5
 ---
-postgres:
-  reactive:
-    client:
-      port: 5432
-      host: localhost
-      database: postgres
-      user: "postgres"
-      password: "root"
-      schema: news
-      maxSize: 5
 schema:
   gen: true

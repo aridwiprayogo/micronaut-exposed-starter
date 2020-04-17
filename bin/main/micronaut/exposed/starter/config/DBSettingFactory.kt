@@ -11,7 +11,5 @@ class DBSettingFactory {
 
     @Bean
     @Singleton
-    fun db(hikariDataSource: DataSource): Database {
-        return Database.connect(hikariDataSource)
-    }
+    fun db(DataSource: DataSource) = Database.connect(DataSource)
 }
